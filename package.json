@@ -7,7 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "dev": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "upload:backend": "rsync -av --exclude='node_modules' --exclude='.git' --exclude='.env' ./ barrancojared577@newExplorer.mooo.com:/home/barrancojared577/project_news-explorer_backend",
+    "restart:backend": "ssh barrancojared577@newExplorer.mooo.com 'cd /home/barrancojared577/project_news-explorer_backend && npm install && pm2 restart backend'",
+    "deploy:backend": "npm run upload:backend && npm run restart:backend",
+    "deploy": "npm run deploy:backend"
   },
   "repository": {
     "type": "git",

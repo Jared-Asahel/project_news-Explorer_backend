@@ -25,7 +25,22 @@ mongoose
     console.error("❌ Error al conectar a MongoDB:", err);
   });
 
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://newExplorer.mooo.com", // Reemplaza con tu dominio real
+];
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true, // si usas cookies o tokens JWT
+  })
+);
 app.options("/*splat", cors());
 
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
