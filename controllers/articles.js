@@ -50,6 +50,22 @@ const deleteArticle = async (req, res, next) => {
     next(err);
   }
 };
+/* 
+const saveArticle = async (req, res, next) => {
+  const { keyword, title, text, date, source, link, image } = req.body;
+  Article.create({
+    keyword,
+    title,
+    text,
+    date,
+    source,
+    link,
+    image,
+    owner: req.user._id,
+  })
+    .then((article) => res.status(201).send(article))
+    .catch(next);
+}; */
 
 module.exports = {
   getArticles,

@@ -6,11 +6,15 @@ const userRoutes = require("./users");
 const articleRoutes = require("./articles");
 const newsRouter = require("./news");
 
-app.use("/api", newsRouter);
+// Ruta pública sin autenticación
+router.use("/api", newsRouter);
+
+// Rutas de auth
 router.post("/signup", validateSignup, createUser);
 router.post("/signin", validateSignin, login);
 
-router.use(auth); // Protege todo lo siguiente
+// Middleware de autenticación (protege todo lo que sigue)
+router.use(auth);
 router.use("/users", userRoutes);
 router.use("/articles", articleRoutes);
 

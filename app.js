@@ -27,7 +27,8 @@ mongoose
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://newExplorer.mooo.com", // Reemplaza con tu dominio real
+  "http://localhost:5173",
+  "https://newexplorer.mooo.com", // Todo minúsculas
 ];
 
 app.use(
@@ -38,10 +39,20 @@ app.use(
       }
       return callback(new Error("Not allowed by CORS"));
     },
-    credentials: true, // si usas cookies o tokens JWT
+    credentials: true,
   })
 );
-app.options("/*splat", cors());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  next();
+});
+app.options("/*splat", cors({ origin: allowedOrigins, credentials: true }));
 
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
 app.use(express.json());

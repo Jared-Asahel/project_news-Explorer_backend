@@ -1,26 +1,28 @@
-export const fetchNewsArticles = async (query) => {
-  const today = new Date();
-  const to = today.toISOString().split("T")[0];
+const express = require("express");
+const axios = require("axios");
+const router = express.Router();
 
-  const fromDate = new Date();
-  fromDate.setDate(today.getDate() - 7); // Últimos 7 días
-  const from = fromDate.toISOString().split("T")[0];
+router.get("/news", async (req, res) => {
+  const { q, from, to } = req.query;
+  const API_KEY =
+    process.env.NEWS_API_KEY || "f360b17499654bb8994fd5053c2fcd03";
 
   try {
-    const response = await fetch(
-      `https://api.newexplorer.mooo.com/api/news?q=${encodeURIComponent(
-        query
-      )}&from=${from}&to=${to}`
-    );
+    const response = await axios.get("https://newsapi.org/v2/everything", {
+      params: {
+        q,
+        from,
+        to,
+        pageSize: 100,
+        apiKey: API_KEY,
+      },
+    });
 
-    if (!response.ok) {
-      throw new Error("Error al obtener artículos desde el backend.");
-    }
-
-    const data = await response.json();
-    return data.articles;
+    res.json(response.data);
   } catch (error) {
-    console.error("fetchNewsArticles:", error.message);
-    throw error;
+    console.error("Error al consultar NewsAPI:", error.message);
+    res.status(500).json({ message: "Error al consultar NewsAPI" });
   }
-};
+});
+
+module.exports = router;
